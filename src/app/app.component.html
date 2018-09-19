@@ -1,20 +1,70 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<head>
+ <style>
+/* * {
+   border: 1px solid red;
+ }*/
+</style>
+</head>
 
+<body>
+
+
+  <div class="row entete">
+    <div class="col-md-1 col-sm-6 logo">
+      <img *ngIf="world.logo" [attr.src]="'http://localhost:8080/'+world.logo" /> 
+    </div>
+    <div class="col-md-4 col-sm-6 titre">{{world.name}}</div>
+    <div class="col-md-3 col-sm-6 score">
+      <span class="score" [innerHTML]="world.money | bigvalue"></span>
+    </div>
+    <div class="col-md-1"></div>
+    <div (click)="toggleMulti()" class="col-md-1 col-sm-6 multi"><span>X </span><span>{{qtmulti}}</span></div>
+    <!-- <div class="col-md-2 pseudo"><input [(ngModel)]="username" (change)="onUsernameChanged()"/></div> -->
+  </div>
+  <div class="row">
+    <div class="col-md-2 menu">
+      <div class="buttonleft btn btn-warning btn-lg" data-toggle="modal" (click)="managersModal.show()" >
+       Managers
+      </div>
+
+     <!--  <div class="row" data-toggle="modal" >Unlocks</div>
+      <div class="row" data-toggle="modal" >Cash Upgrades<span [hidden]="!upAv" style="color:#d87b44;float:right;font-size:30px;border-radius:100%;height:30px;width:30px;background-color:white;" class="badge"> ! </span></div>
+      <div class="row" data-toggle="modal" >Angel Upgrades<span [hidden]="!anAv" style="color:#d87b44;float:right;font-size:30px;border-radius:100%;height:30px;width:30px;background-color:white;" class="badge"> ! </span></div>
+ -->
+      <!-- <div class="row" data-toggle="modal" >Managers<span [hidden]="!manAv" style="color:#d87b44;float:right;font-size:30px;border-radius:100%;height:30px;width:30px;background-color:white;" class="badge"> ! </span></div>
+ -->
+      <!-- <div class="row" data-toggle="modal" >Investors</div> -->
+    </div>
+  </div>
+
+  <app-modal #managersModal>
+   <div class="app-modal-header">
+     <h4 class="modal-title">Managers make you feel better !</h4>
+   </div>
+   <div class="app-modal-body">
+    <div *ngFor="let manager of world.managers.pallier">
+      <div class="row">
+        <div class="col-md-3"><img class="round" [attr.src]="'http://localhost:8080/'+manager.logo" alt="Logo {{manager.name}}" width=100% /></div>
+        <div class="col-md-6" style="text-align:center;">
+          <div class="row nomManager">{{manager.name}}</div>
+          <div class="row cible">{{world.products.product[manager.idcible-1].name}}</div>
+          <div class="row" [innerHTML]="manager.seuil | bigvalue"></div>
+        </div>
+        <button (click)="hireManager(manager)" [ngClass]="{'bloque': world.money < manager.seuil, 'col-md-3':true, 'hire':world.money >= manager.seuil}" style="height:50px;">ENGAGER !</button>
+        </div>
+      </div>
+   </div>
+    <div class="app-modal-footer">
+     <button type="button" class="btn btn-default"
+     (click)="managersModal.hide()">Close</button>
+   </div>
+  </app-modal>
+
+
+  <span class="score" [innerHTML]="world.money | bigvalue "></span>
+  <div *ngIf="world.products.product">
+   <app-product *ngIf="world.products.product[0]" [prod]="world.products.product[0]" [qtmulti]="qtmulti" [money]="world.money" (notifyMoney)="onBuy($event)" (notifyProduction)="onProductionDone($event)" class="product col-md-6"></app-product>
+   <app-product *ngIf="world.products.product[1]"  [prod]="world.products.product[1]" [qtmulti]="qtmulti" [money]="world.money" (notifyMoney)="onBuy($event)" (notifyProduction)="onProductionDone($event)" class="product col-md-6"></app-product>
+  </div>
+</body>

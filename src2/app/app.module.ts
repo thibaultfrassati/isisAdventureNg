@@ -1,12 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-// import { ToasterModule } from 'angular2-toaster';
+import { FormsModule } from '@angular/forms';
+
 import { AppComponent } from './app.component';
 import { ProductComponent } from './product/product.component';
-import { RestserviceService } from './services/restservice.service';
+import { RestserviceService } from './restservice.service';
 import { BigvaluePipe } from './bigvalue.pipe';
 import { ModalComponent } from './modal/modal.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 @NgModule({
   declarations: [
@@ -16,10 +19,15 @@ import { ModalComponent } from './modal/modal.component';
     ModalComponent
   ],
   imports: [
-    BrowserModule, HttpModule
-    // , ToasterModule
+    BrowserModule,
+    HttpModule,
+    BrowserAnimationsModule,
+    ToasterModule,
+    FormsModule
   ],
-  providers: [RestserviceService],
+  providers: [RestserviceService,ToasterService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}

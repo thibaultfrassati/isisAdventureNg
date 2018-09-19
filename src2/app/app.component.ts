@@ -1,6 +1,6 @@
 import { Component, Input, ViewChildren, QueryList } from '@angular/core';
-import { RestserviceService } from './services/restservice.service';
-import { World, Pallier, Product } from './class/world';
+import { RestserviceService } from './restservice.service';
+import { World, Pallier, Product } from './world';
 import { ProductComponent } from './product/product.component';
 import { ToasterService } from 'angular2-toaster';
 
@@ -10,7 +10,7 @@ import { ToasterService } from 'angular2-toaster';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Je suis une roleX';
+  title = 'Pataterie Capitalist 2k19';
 
   @ViewChildren(ProductComponent) productsComponent: QueryList<ProductComponent>;
 
@@ -29,50 +29,66 @@ export class AppComponent {
   bonusangels: number;
   nbangelsgen: number;
 
-  constructor(private service: RestserviceService,/* toasterService: ToasterService*/) {
+  constructor(private service: RestserviceService, toasterService: ToasterService) {
+    this.minqte = 0;
+    this.totalangels=0;
+    this.activeangels=0;
+    this.nbangelsgen=0;
+    this.bonusangels=2;
+    this.toasterService = toasterService;
     this.server = service.getServer();
-    service.setUser(this.username);
+    this.username = localStorage.getItem("username");
+    if(this.username==undefined){
+      this.username = "Patatain"+Math.floor(Math.random() * 10000);
+      localStorage.setItem("username", this.username);}
+      service.setUser(this.username);
       service.getWorld().then(
         world => {
           this.world = world;
         });
       }
 
-      onProductionDone(p:Product){
-      	console.log(p);
-        this.world.money+=p.revenu*p.quantite;
-        this.world.score+=p.revenu*p.quantite;
-        // console.log(this.world.money);
-        // this.nbangelsgen=150*Math.sqrt(this.world.score/Math.pow(10,15))-this.totalangels;
-        // console.log(this.totalangels);
-        // this.ManagersAvailable();
-        // this.UpgradesAvailable();
-        // this.service.putProduct(p);
-      }
-
-
       ngOnInit() {
- 		this.qtmulti=1;
+        this.qtmulti=1;
         this.money=this.world.money;
         this.score=this.world.score;
+        //this.totalangels=this.world.totalangels;
+        //console.log(this.world.totalangels);
+        //this.activeangels=this.world.activeangels;
+        //this.bonusangels=this.world.angelbonus;
+      }
+
+      onProductionDone(p:Product){
+        this.world.money+=p.revenu*p.quantite;
+        this.world.score+=p.revenu*p.quantite;
+        this.nbangelsgen=150*Math.sqrt(this.world.score/Math.pow(10,15))-this.totalangels;
+        console.log(this.totalangels);
+        this.ManagersAvailable();
+        this.UpgradesAvailable();
+        this.service.putProduct(p);
       }
 
       onBuy(n:number){
         this.world.money-=n;
-        // this.ManagersAvailable();
-        // this.UpgradesAvailable();
+        this.ManagersAvailable();
+        this.UpgradesAvailable();
         let min = this.world.products.product[0].quantite;
         this.world.products.product.forEach(p =>{if(p.quantite<min){min=p.quantite;}});
         this.world.allunlocks.pallier.forEach(unlock => {
-		    if(!unlock.unlocked){
-		      if(min>=unlock.seuil){
-		        this.calcUpgradeAll(unlock);
-		        // this.toasterService.pop('success','Unlock débloqué !', unlock.name);
-		      };
-		    };
-        });
-      }
+        if(!unlock.unlocked){
+          if(min>=unlock.seuil){
+            this.calcUpgradeAll(unlock);
+            this.toasterService.pop('success','Unlock débloqué !', unlock.name);
+          };
+        };
+      });
+    }
 
+    calcUpgradeAll(u:Pallier){
+      this.productsComponent.forEach(p => {
+        p.calcUpgrade(u);
+      });
+    }
 
     toggleMulti(){
       if(this.qtmulti == 1){
@@ -86,8 +102,7 @@ export class AppComponent {
       }
     }
 
-
- ManagersAvailable(){
+    ManagersAvailable(){
       this.manAv = false;
       this.world.managers.pallier.forEach(manager => {
         if(!manager.unlocked){
@@ -145,11 +160,4 @@ export class AppComponent {
         this.service.getWorld().then( world => { this.world = world});
       };
     }
-
-    calcUpgradeAll(u:Pallier){
-      this.productsComponent.forEach(p => {
-        p.calcUpgrade(u);
-      });
-    }
-
   }
