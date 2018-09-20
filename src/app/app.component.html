@@ -12,7 +12,7 @@
 
   <div class="row entete">
     <div class="col-md-1 col-sm-6 logo">
-      <img *ngIf="world.logo" [attr.src]="'http://localhost:8080/'+world.logo" /> 
+      <img id="bb" class="round" *ngIf="world.logo" [attr.src]="'http://localhost:8080/'+world.logo" /> 
     </div>
     <div class="col-md-4 col-sm-6 titre">{{world.name}}</div>
     <div class="col-md-3 col-sm-6 score">
@@ -20,21 +20,13 @@
     </div>
     <div class="col-md-1"></div>
     <div (click)="toggleMulti()" class="col-md-1 col-sm-6 multi"><span>X </span><span>{{qtmulti}}</span></div>
-    <!-- <div class="col-md-2 pseudo"><input [(ngModel)]="username" (change)="onUsernameChanged()"/></div> -->
   </div>
   <div class="row">
     <div class="col-md-2 menu">
       <div class="buttonleft btn btn-warning btn-lg" data-toggle="modal" (click)="managersModal.show()" >
-       Managers
+       Managers 
+       <span [hidden]="!manAv" style="color:#d87b44;float:right;font-size:25px;border-radius:100%;height:25px;width:25px;background-color:white;" class="badge"> ! </span>
       </div>
-
-     <!--  <div class="row" data-toggle="modal" >Unlocks</div>
-      <div class="row" data-toggle="modal" >Cash Upgrades<span [hidden]="!upAv" style="color:#d87b44;float:right;font-size:30px;border-radius:100%;height:30px;width:30px;background-color:white;" class="badge"> ! </span></div>
-      <div class="row" data-toggle="modal" >Angel Upgrades<span [hidden]="!anAv" style="color:#d87b44;float:right;font-size:30px;border-radius:100%;height:30px;width:30px;background-color:white;" class="badge"> ! </span></div>
- -->
-      <!-- <div class="row" data-toggle="modal" >Managers<span [hidden]="!manAv" style="color:#d87b44;float:right;font-size:30px;border-radius:100%;height:30px;width:30px;background-color:white;" class="badge"> ! </span></div>
- -->
-      <!-- <div class="row" data-toggle="modal" >Investors</div> -->
     </div>
   </div>
 
@@ -44,7 +36,7 @@
    </div>
    <div class="app-modal-body">
     <div *ngFor="let manager of world.managers.pallier">
-      <div class="row">
+      <div class="row {{manager.unlocked}}">
         <div class="col-md-3"><img class="round" [attr.src]="'http://localhost:8080/'+manager.logo" alt="Logo {{manager.name}}" width=100% /></div>
         <div class="col-md-6" style="text-align:center;">
           <div class="row nomManager">{{manager.name}}</div>
@@ -66,5 +58,12 @@
   <div *ngIf="world.products.product">
    <app-product *ngIf="world.products.product[0]" [prod]="world.products.product[0]" [qtmulti]="qtmulti" [money]="world.money" (notifyMoney)="onBuy($event)" (notifyProduction)="onProductionDone($event)" class="product col-md-6"></app-product>
    <app-product *ngIf="world.products.product[1]"  [prod]="world.products.product[1]" [qtmulti]="qtmulti" [money]="world.money" (notifyMoney)="onBuy($event)" (notifyProduction)="onProductionDone($event)" class="product col-md-6"></app-product>
+   <app-product *ngIf="world.products.product[1]"  [prod]="world.products.product[2]" [qtmulti]="qtmulti" [money]="world.money" (notifyMoney)="onBuy($event)" (notifyProduction)="onProductionDone($event)" class="product col-md-6"></app-product>
+   <app-product *ngIf="world.products.product[1]"  [prod]="world.products.product[3]" [qtmulti]="qtmulti" [money]="world.money" (notifyMoney)="onBuy($event)" (notifyProduction)="onProductionDone($event)" class="product col-md-6"></app-product>
   </div>
+
+
+  <toaster-container></toaster-container>
+
+
 </body>

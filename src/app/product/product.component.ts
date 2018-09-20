@@ -79,10 +79,6 @@ export class ProductComponent implements OnInit {
      if(!this.bonusvitesse) {
      	this.bonusvitesse = 1;
      }
-     // console.log("---------------------------");
-     // console.log("bonus v : "+this.bonusvitesse);
-     // console.log("Timeleft  : "+this.product.timeleft);
-     // console.log("---------------------------");
     this.product.timeleft = this.product.timeleft / this.bonusvitesse;
 
     this.bonusvitesse = 1;
